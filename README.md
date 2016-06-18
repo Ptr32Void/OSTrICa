@@ -1,5 +1,4 @@
-OSTrICa - Open Source Threat Intelligence Collector
-An Open Source plugin-oriented framework to collect and visualize Threat Intelligence Information
+OSTrICa - Open Source Threat Intelligence Collector (An Open Source plugin-oriented framework to collect and visualize Threat Intelligence Information)
 ========
 ![OSTrICa Graph]( https://github.com/Ptr32Void/OSTrICa/blob/master/docs/OSTrICaLogo.png "OSTrICa Graph" )
 
