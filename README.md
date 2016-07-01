@@ -104,7 +104,6 @@ To generate the graph 2 commands are available:
 The following list contains the currently available plugins:
 * `BlackLists` - Developer `Ptr32Void`
 * `CymruWhois` - Developer `Ptr32Void`
-* `DeepViz` - Developer `Ptr32Void`
 * `DomainBigData` - Developer `Ptr32Void`
 * `NortonSafeWeb` - Developer `Ptr32Void`
 * `PyWhois` - Developer `Ptr32Void`
