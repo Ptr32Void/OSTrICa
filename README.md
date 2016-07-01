@@ -100,3 +100,69 @@ To generate the graph 2 commands are available:
 
 ![OSTrICa Graph]( https://github.com/Ptr32Void/OSTrICa/blob/master/docs/OstricaGraph.png "OSTrICa Graph" )
 
+## Currently available plugins
+The following list contains the currently available plugins:
+* `BlackLists` - Developer `Ptr32Void`
+* `CymruWhois` - Developer `Ptr32Void`
+* `DeepViz` - Developer `Ptr32Void`
+* `DomainBigData` - Developer `Ptr32Void`
+* `NortonSafeWeb` - Developer `Ptr32Void`
+* `PyWhois` - Developer `Ptr32Void`
+* `SafeBrowsing` - Developer `Ptr32Void`7
+* `SpyOnWeb` - Developer `Ptr32Void`
+* `TCPIPutils` - Developer `Ptr32Void`
+* `VirusTotal` - Developer `Ptr32Void`
+* `WebSiteInformer` - Developer `Ptr32Void`
+* `WhoisXmlApi` - Developer `Ptr32Void`
+
+## How to develop new Plugins
+Plugins are stored in the directory named `Plugins`. 
+To create a new Plugin you need to create a new subdirectory under `Plugins` and within that new directory a new `__init__.py` should be added.
+
+OSTrICa will call 2 functions within each plugins `run` and `data_visualization`, defined as follow:
+```python
+# intelligence is the IoC provided (eg.: something@yahoo.com)
+# extraction_type is the typology (eg.: an MD5 or email, etc)
+def run(intelligence, extraction_type):
+# function run is the core part of the plugin. It is used to collect the information and afterwards it returns back JSON data as per below:
+    .... code used to collect Intelligence ....
+	# a dictionary where extraction_type is the type (md5, email, etc) and intelligence_dictionary is the JSON data collected by the plugin
+    return {'extraction_type': extraction_type, 'intelligence_information':intelligence_dictionary}
+
+	
+
+# nodes are passed by OSTrICa itself and should never be overwritten but updated because they might contain details related to the previously collected information
+# edges are passed by OSTrICa itself and should never be overwritten but updated because they might contain details related to the previously collected information
+# json_data is the json output collected by the plugin
+def data_visualization(nodes, edges, json_data):
+```
+
+It is also mandatory to return `nodes` and `edges` from `data_visualization` as they are used by OSTrICa. If there is no data to be visualized it is possible to return the nodes/edges with following code:
+```python
+def data_visualization(nodes, edges, json_data):
+    return nodes, edges
+```
+
+You should also add the following import and variables at the top of the file.
+```python
+from ostrica.utilities.cfg import Config as cfg # used to include configuration data
+
+# used to identify what kind of data the plugin can extract:
+# ip = IP Address information
+# domain = Domain information
+# asn = ASN information
+# md5 = MD5 information
+# sha256 = SHA256 information
+# email = Email information
+extraction_type = [cfg.intelligence_type['ip'], cfg.intelligence_type['domain'], cfg.intelligence_type['asn']]
+# True if plugin is enabled, False if not
+enabled = True
+# Plugin Version
+version = 0.1
+# Developer(s) name and contact
+developer = 'Your Name <Your Email>'
+# Plugin Description
+description = 'Plugin used to collect information about IPs, domains or ASNs on SafeBrowsing'
+# True if visualization module is available for the plugin, False otherwise
+visual_data = True
+```
