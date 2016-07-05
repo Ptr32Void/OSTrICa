@@ -25,7 +25,7 @@ import inspect
 import imp
 import os
 
-plugin_folder = "..\\Plugins"
+plugin_folder = "Plugins"
 main_module = "__init__"
 
 class PluginLoader(object):
@@ -33,7 +33,10 @@ class PluginLoader(object):
     def __init__(self):
         self.DEBUG = False
         self.plugins = []
-        tool_path = os.path.dirname(__file__)
+	dirname=os.path.dirname
+	tool_path = os.path.dirname(dirname(__file__))
+        # TEMP FIX tool_path ="/home/remnux/OSTrICa/ostrica"
+	#tool_path = os.path.dirname(__file__)
         plugins_directory = os.path.join(tool_path, plugin_folder)
         for plugin_name in os.listdir(plugins_directory):
             plugin_location = os.path.join(plugins_directory, plugin_name)
