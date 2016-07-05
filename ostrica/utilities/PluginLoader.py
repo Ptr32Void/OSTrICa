@@ -25,7 +25,7 @@ import inspect
 import imp
 import os
 
-plugin_folder = "..\\Plugins"
+plugin_folder = os.path.join("..", "Plugins")
 main_module = "__init__"
 
 class PluginLoader(object):
