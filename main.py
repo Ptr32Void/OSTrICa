@@ -81,6 +81,10 @@ class OstricaConsole:
     def run_ostrica(self):
         if self.rnd_report_fn == None:
             self.rnd_report_fn = str(uuid.uuid4())
+	#add sanity check to ensure 'report' directory is there
+	checkdir=os.path.join(os.getcwd(),'report')
+	if not os.path.exists(checkdir):
+		os.makedirs(checkdir)
         filename = os.path.join(os.getcwd(), 'report', self.rnd_report_fn)
         fh = open(filename, 'a')
         self.ostrica.intelligence_gathering()
