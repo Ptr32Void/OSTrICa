@@ -65,6 +65,10 @@ class OstriViz:
 
             self.nodes_html += '</ul><br/>'
 
+        #add sanity check to ensure 'report' directory is there
+	checkdir=os.path.join(os.getcwd(),'viz')
+	if not os.path.exists(checkdir):
+		os.makedirs(checkdir)
         filename = os.path.join(self.script_path, 'viz', rnd_fn)
         fh = open(filename, 'w')
         fh.write(self.generate_html_header())
@@ -81,14 +85,21 @@ class OstriViz:
         self.original_intel = ext_original_intel
 
     def generate_html_header(self):
-        fname = os.path.join(self.script_path, 'ostrica', 'utilities', 'header.cfg')
+        #added this to fix the path issues
+	dirname=os.path.dirname
+	dirname=os.path.dirname(dirname(__file__))
+	#fname = os.path.join(self.script_path, 'ostrica', 'utilities', 'header.cfg')
+	fname=os.path.join(dirname,'utilities','header.cfg')
         fh = open(fname, 'r')
         buff_header = fh.read()
         fh.close()
         return buff_header
 
     def generate_html_mid_page(self, graph_typology=''):
-        fname = os.path.join(self.script_path, 'ostrica', 'utilities', 'mid_page.cfg')
+        dirname=os.path.dirname
+	dirname=os.path.dirname(dirname(__file__))
+	fname=os.path.join(dirname,'utilities','mid_page.cfg')
+	#fname = os.path.join(self.script_path, 'ostrica', 'utilities', 'mid_page.cfg')
         fh = open(fname, 'r')
         buff_header = fh.read()
         fh.close()
@@ -104,7 +115,10 @@ class OstriViz:
             return buff_header.replace('OSTRICA_VARS_IN_OSTRIVIZ', replacement)
 
     def generate_html_footer(self):
-        fname = os.path.join(self.script_path, 'ostrica', 'utilities', 'footer.cfg')
+        dirname=os.path.dirname
+	dirname=os.path.dirname(dirname(__file__))
+	fname=os.path.join(dirname,'utilities','footer.cfg')
+	#fname = os.path.join(self.script_path, 'ostrica', 'utilities', 'footer.cfg')
         fh = open(fname, 'r')
         buff_footer = fh.read()
         fh.close()
