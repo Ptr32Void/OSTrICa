@@ -107,7 +107,7 @@ The following list contains the currently available plugins:
 * `DomainBigData` - Developer `Ptr32Void`
 * `NortonSafeWeb` - Developer `Ptr32Void`
 * `PyWhois` - Developer `Ptr32Void`
-* `SafeBrowsing` - Developer `Ptr32Void`7
+* `SafeBrowsing` - Developer `Ptr32Void`
 * `SpyOnWeb` - Developer `Ptr32Void`
 * `TCPIPutils` - Developer `Ptr32Void`
 * `VirusTotal` - Developer `Ptr32Void`
