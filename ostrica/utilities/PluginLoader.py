@@ -25,16 +25,14 @@ import inspect
 import imp
 import os
 
-plugin_folder = "..\\Plugins"
-main_module = "__init__"
+from cfg import Config as cfg
 
 class PluginLoader(object):
 
     def __init__(self):
-        self.DEBUG = False
         self.plugins = []
-        tool_path = os.path.dirname(__file__)
-        plugins_directory = os.path.join(tool_path, plugin_folder)
+        tool_path = os.getcwd()
+        plugins_directory = os.path.join(tool_path, 'ostrica', cfg.plugin_folder)
         for plugin_name in os.listdir(plugins_directory):
             plugin_location = os.path.join(plugins_directory, plugin_name)
             if not os.path.isdir(plugin_location):
@@ -43,8 +41,8 @@ class PluginLoader(object):
 
     def load_plugin(self, plugin_location, plugin_name):
         try:
-            f, filename, description = imp.find_module(main_module, [plugin_location])
-            if self.DEBUG:
+            f, filename, description = imp.find_module(cfg.main_module, [plugin_location])
+            if cfg.DEBUG:
                 print 'Plugin location: %s (%s)' % (plugin_location, plugin_name)
             self.load_module(plugin_name, f, filename, description)
         except ImportError, e:
@@ -54,14 +52,14 @@ class PluginLoader(object):
         loaded_plugin_info = imp.load_module(plugin_name, f, filename, description)
         if loaded_plugin_info.enabled:
             try:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'Loading %s' % (plugin_name)
                 self.plugins.append({'name': plugin_name, 'extraction_type':loaded_plugin_info.extraction_type, 'plugin':loaded_plugin_info})
             except AttributeError, e:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'No extraction_types for plugin %s' % (plugin_name)
                 print traceback.print_exc()
                 self.plugins.append({'name': plugin_name, 'extraction_type':'', 'plugin':loaded_plugin_info})
         else:
-            if self.DEBUG:
+            if cfg.DEBUG:
                 print 'Plugin %s disabled' % (plugin_name)

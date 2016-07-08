@@ -24,6 +24,8 @@
 class Config(object):
     timeout = 60
     DEBUG = True
+    plugin_folder = "Plugins"
+    main_module = "__init__"
     tool_name = "OSTrICa"
     tool_description = "Open Source Threat Intellicence Collector"
     version = '0.5'

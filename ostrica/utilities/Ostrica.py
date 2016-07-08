@@ -31,7 +31,6 @@ from cfg import Config as cfg
 class OSTrICa:
 
     def __init__(self, input_data=''):
-        self.DEBUG = False
         self.intelligence = []
         self.intellingece_q = Queue.Queue()
         self.loader = PluginLoader.PluginLoader()
@@ -47,11 +46,11 @@ class OSTrICa:
             try:
                 self.intellingece_q.get(block=False)
             except Queue.Empty:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'clear_intelligence_queue() Queue Empty.'
                 break
             except Exception, e:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'clear_intelligence_queue() exception triggered %s' % (str(e))
                 print traceback.print_exc()
 
@@ -66,11 +65,11 @@ class OSTrICa:
     def parsing_intelligence_queue(self):
         raw_data_for_intel = self.intellingece_q.get(block=False)
         if raw_data_for_intel['extraction_type'] in cfg.intelligence_type.values():
-            if self.DEBUG:
+            if cfg.DEBUG:
                 print 'Working on %s' % (raw_data_for_intel['intelligence_information'])
             self.loading_plugins(raw_data_for_intel)
         else:
-            if self.DEBUG:
+            if cfg.DEBUG:
                 print 'Plugin for %s not implemented' % (raw_data_for_intel['extraction_type'])
 
     def intelligence_gathering(self):
@@ -78,11 +77,11 @@ class OSTrICa:
             try:
                 self.parsing_intelligence_queue()
             except Queue.Empty:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'intelligence_gathering() Queue Empty'
                 break
             except Exception, e:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'intelligence_gathering() exception triggered %s' % (str(e))
                 print traceback.print_exc()
 
@@ -93,12 +92,12 @@ class OSTrICa:
     def call_plugin_method(self, plugin, intelligence_type, intelligence_information):
         for extraction_type in plugin['extraction_type']:
             if extraction_type == intelligence_type:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'Requested intelligence method %s is valid for %s!' % (intelligence_type, plugin['name'])
                 try:
                     self.save_intelligence(intelligence_information, intelligence_type, plugin['name'], plugin['plugin'].run(intelligence_information, extraction_type))
                 except Exception, e:
-                    if self.DEBUG:
+                    if cfg.DEBUG:
                         print 'call_plugin_method() exception %s (%s)!' % (str(e), plugin['name'])
                         print traceback.print_exc()
 
@@ -116,7 +115,7 @@ class OSTrICa:
             try:
                 nodes, edges = plugin['plugin'].data_visualization(nodes, edges, json_data)
             except Exception, e:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'plugin_data_visualization() exception %s (%s)!' % (str(e), plugin['name'])
                     print traceback.print_exc()
         return nodes, edges
@@ -140,6 +139,6 @@ class OSTrICa:
                     print '\t %s' % ext_type
                 print '\n\n'
             except Exception, e:
-                if self.DEBUG:
+                if cfg.DEBUG:
                     print 'plugins_info() exception %s (%s)!' % (str(e), plugin['plugin'])
                     print traceback.print_exc()
