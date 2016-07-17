@@ -20,6 +20,7 @@
 #				You should have received a copy of the GNU General Public License
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
+import re
 import os
 import uuid
 
@@ -65,6 +66,10 @@ class OstriViz:
 
             self.nodes_html += '</ul><br/>'
 
+        # TODO: fix it. It is a quick hack around unicode data
+        self.nodes_html = self.nodes_html.encode('utf8', 'replace')
+        self.nodes_html = re.sub(r'[^\x00-\x7f]',r'',self.nodes_html)
+        
         filename = os.path.join(self.script_path, 'viz', rnd_fn)
         fh = open(filename, 'w')
         fh.write(self.generate_html_header())
@@ -138,5 +143,8 @@ class OstriViz:
         buff = buff[:-1]
 
         buff += '] },'
+        # TODO: fix it. It is a quick hack around unicode data
+        buff = buff.encode('utf8', 'replace')
+        buff = re.sub(r'[^\x00-\x7f]',r'',buff)
 
         return buff

@@ -35,6 +35,7 @@ Dependencies depends on the installed Plugins. For example:
 * `python-deepviz-master`, used by DeepViz plugin (it requires an API key)
 * `python-whois-0.5.2`, used by PyWhois plugin
 * `pythonwhois-2.4.3`, used by PyWhois plugin
+* `requests`, used by ThreatCrowd plugin (query limit is set as per https://github.com/threatcrowd/ApiV2)
 
 
 ## How to use OSTrICa
@@ -73,9 +74,9 @@ To collect the information about specific IoCs you can execute the following com
 >email=jgou.veia@gmail.com
 >asn=16276
 >run
-Output created in C:\Users\Roberto\Documents\GitHub\OSTrICa_development\report\a0b983ae-e30a-46dc-a1d0-b59e661595c0
+Output created in C:\Users\Roberto\Documents\GitHub\OSTrICa\report\a0b983ae-e30a-46dc-a1d0-b59e661595c0
 > graph
-Graph generated in C:\Users\Roberto\Documents\GitHub\OSTrICa_development\viz\f4da8f02-ec9c-4700-9345-bd715de7789f.html
+Graph generated in C:\Users\Roberto\Documents\GitHub\OSTrICa\viz\f4da8f02-ec9c-4700-9345-bd715de7789f.html
 ```
 
 In case a verbose output is needed, it is possible to enable the `DEBUG` option in the `cfg.py`. 
@@ -102,6 +103,7 @@ To generate the graph 2 commands are available:
 
 ## Currently available plugins
 The following list contains the currently available plugins:
+* `ThreatCrowd` - Developer `Ptr32Void`
 * `BlackLists` - Developer `Ptr32Void`
 * `CymruWhois` - Developer `Ptr32Void`
 * `DomainBigData` - Developer `Ptr32Void`
@@ -113,6 +115,7 @@ The following list contains the currently available plugins:
 * `VirusTotal` - Developer `Ptr32Void`
 * `WebSiteInformer` - Developer `Ptr32Void`
 * `WhoisXmlApi` - Developer `Ptr32Void`
+
 
 ## How to develop new Plugins
 Plugins are stored in the directory named `Plugins`. 
