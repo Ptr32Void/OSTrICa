@@ -32,11 +32,12 @@ Dependencies depends on the installed Plugins. For example:
 * `BeautifulSoup`, used by almost all the plugins to scrape web pages
 * `dnspython-1.12.0`, mainly used by CymruWhois plugin
 * `ipwhois-0.11.1`, used by PyWhois plugin
-* `python-deepviz-master`, used by DeepViz plugin (it requires an API key)
+* `python-deepviz-master`, used by DeepViz plugin (it requires an API key) - At the moment DeepViz plugin is not available to the public.
 * `python-whois-0.5.2`, used by PyWhois plugin
 * `pythonwhois-2.4.3`, used by PyWhois plugin
 * `requests`, used by ThreatCrowd plugin (query limit is set as per https://github.com/threatcrowd/ApiV2)
 
+Note: OSTrICa works on Python version >= 2.7.9
 
 ## How to use OSTrICa
 In order to use OSTrICa you need to execute the file `main.py`; and to get a list of available commands you need to run the command `help`.
