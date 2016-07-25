@@ -1,0 +1,7 @@
+beautifulsoup
+dnspython
+ipwhois
+requests
+whois
+pythonwhois
+python-deepviz
