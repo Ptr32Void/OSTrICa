@@ -1,3 +1,4 @@
+* 26 July 2016 - Added requirements.txt to ease the dependencies installation via "pip install" (Thanks to  PidgeyL)
 * 17 July 2016 - Added ThreatCrowd Plugin and updated visualization module
 * 08 July 2016 - Updated code to make it cross platform (Thanks to sketchymoose and inigma117)
 * 08 July 2016 - Added minor fixes
