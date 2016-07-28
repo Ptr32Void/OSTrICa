@@ -25,6 +25,9 @@ import sys
 import uuid
 import os
 
+if sys.version_info >= (3, 0):
+  raw_input = input
+
 from ostrica.utilities.Ostrica import OSTrICa
 from ostrica.utilities.cfg import Config as cfg
 from ostrica.utilities.OstriViz import OstriViz
@@ -55,25 +58,24 @@ class OstricaConsole:
         self.visualization.generate_graph(self.rnd_fn, self.nodes, self.edges, self.original_intel, graph_typology)
 
     def help(self):
-        print 'Following options are available\n'
-        print '\tdomain - used to collect domains information'
-        print '\tExample: domain=google.com or domain=google.com,yahoo.com'
-        print '\tip - used to collect IP information'
-        print '\tExample: ip=8.8.8.8 or ip=8.8.8.8,173.194.68.99'
-        print '\tmd5 - used to collect MD5 information'
-        print '\tsha256 - used to collect SHA256 information'
-        print '\tasn - used to collect ASN information'
-        print '\temail - used to collect email information'
-        print '\tgraph - generate a graph based on all the information collected'
-        print '\tcola_graph - generate a graph based on all the information collected where nodes do not overlap (it might take a while to generate the graph if there are lots of nodes)'
-        print '\tgclean - clear graph information'
-        print '\tshow - show all information that will be collected'
-        print '\trun - extract intelligece information'
-        print '\thelp - this help'
-        print '\tplugins - show available plugins'
+        print('Following options are available\n')
+        print('\tdomain - used to collect domains information')
+        print('\tExample: domain=google.com or domain=google.com,yahoo.com')
+        print('\tip - used to collect IP information')
+        print('\tExample: ip=8.8.8.8 or ip=8.8.8.8,173.194.68.99')
+        print('\tmd5 - used to collect MD5 information')
+        print('\tsha256 - used to collect SHA256 information')
+        print('\tasn - used to collect ASN information')
+        print('\temail - used to collect email information')
+        print('\tgraph - generate a graph based on all the information collected')
+        print('\tcola_graph - generate a graph based on all the information collected where nodes do not overlap (it might take a while to generate the graph if there are lots of nodes)')
+        print('\tgclean - clear graph information')
+        print('\tshow - show all information that will be collected')
+        print('\trun - extract intelligece information')
+        print('\thelp - this help')
+        print('\tplugins - show available plugins')
 
     def clean_ostrica_graph(self):
-        self.edges = {}
         self.edges = {}
         self.rnd_fn = None
         self.rnd_report_fn = None
@@ -88,7 +90,7 @@ class OstricaConsole:
             self.nodes, self.edges = self.ostrica.plugin_data_visualization(self.nodes, self.edges, intel)
             fh.write( json.dumps(intel, sort_keys=True, indent=4, separators=(',', ': ')) )
 
-        print 'Output created in %s' % (filename)
+        print('Output created in %s' % (filename))
         fh.close()
 
     def plugins_info(self):
@@ -99,7 +101,7 @@ class OstricaConsole:
 
     def show_ostrica_queue_elements(self):
         for ostrica_queue in self.ostrica.extract_intelligence_queue_items():
-            print ostrica_queue
+            print(ostrica_queue)
 
     def domain_intelligence(self, domains):
         for domain in domains:
@@ -166,24 +168,29 @@ class OstricaConsole:
         elif intelligence_type.strip() == 'plugins':
             self.plugins_info()
         else:
-            print 'Unknown command.'
+            print('Unknown command.')
 
     def console(self):
         while 1:
-            data_input = raw_input("> ")
-            intelligence = data_input.split('=')
-            if len(intelligence) == 2:
-                intelligence_type = intelligence[0].strip()
-                intelligence_data = intelligence[1].split(',')
-                self.parse_intelligence_type(intelligence_type, intelligence_data)
-            else:
-                intelligence_type = intelligence[0].strip()
-                self.parse_intelligence_type(intelligence_type, '')
+            try:
+                data_input = raw_input("> ")
+                if not data_input:
+                    continue
+                intelligence = data_input.split('=')
+                if len(intelligence) == 2:
+                    intelligence_type = intelligence[0].strip()
+                    intelligence_data = intelligence[1].split(',')
+                    self.parse_intelligence_type(intelligence_type, intelligence_data)
+                else:
+                    intelligence_type = intelligence[0].strip()
+                    self.parse_intelligence_type(intelligence_type, '')
+            except (KeyboardInterrupt, EOFError):
+              break
 
 def main():
-    print '%s v.%s - %s' % (cfg.tool_name, cfg.version, cfg.tool_description)
-    print 'Developed by: %s <%s>' % (cfg.developer, cfg.developer_email)
-    print 'write "help" for help'
+    print('%s v.%s - %s' % (cfg.tool_name, cfg.version, cfg.tool_description))
+    print('Developed by: %s <%s>' % (cfg.developer, cfg.developer_email))
+    print('write "help" for help')
 
     ostrica_console = OstricaConsole()
     ostrica_console.console()
