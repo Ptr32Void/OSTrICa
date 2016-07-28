@@ -1,0 +1,3 @@
+*.pyc
+report/
+viz/*-*-*-*.html
