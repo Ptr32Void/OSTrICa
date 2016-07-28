@@ -21,13 +21,11 @@
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
 import sys
-import httplib
-import string
-import socket
-import gzip
-import re
-import StringIO
-import json
+if sys.version_info < (3, 0):
+  import httplib
+else:
+  import http.client as httplib
+
 from bs4 import BeautifulSoup
 
 from ostrica.utilities.cfg import Config as cfg
@@ -51,7 +49,7 @@ class SpyOnWeb:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup SpyOnWeb...'
+            print('cleanup SpyOnWeb...')
         self.intelligence = {}
 
 
@@ -142,7 +140,7 @@ class SpyOnWeb:
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running SpyOnWeb() on %s' % intelligence
+        print('Running SpyOnWeb() on %s' % intelligence)
 
     intel_collector = SpyOnWeb()
     if (extraction_type == cfg.intelligence_type['ip']) or (extraction_type == cfg.intelligence_type['domain']):
@@ -201,12 +199,12 @@ class SpyOnWebVisual:
 
     def parse_visual_data(self):
         for intel in self.visual_report_dictionary[self.origin]['SpyOnWeb']:
-            for key, value in intel.iteritems():
+            for key, value in intel.items():
                 if key == 'related_websites':
                     self._manage_spyonweb_relatedwebsites(value)
 
     def _manage_spyonweb_relatedwebsites(self, sites):
-        for key, value in sites.iteritems():
+        for key, value in sites.items():
             if key == 'ip':
                 self._manage_associated_hosts_to_ip(value)
             elif key == 'GoogleAdSense':

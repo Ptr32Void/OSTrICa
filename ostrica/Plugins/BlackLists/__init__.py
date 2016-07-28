@@ -21,13 +21,25 @@
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
 import sys
-import httplib
-import string
-import socket
+if sys.version_info < (3, 0):
+  import httplib
+  import StringIO
+else:
+  import http.client as httplib
+  import io as StringIO
 import gzip
-import re
-import StringIO
-from bs4 import BeautifulSoup
+
+def get_zip_obj(data):
+  if sys.version_info < (3, 0):
+    return StringIO.StringIO(data)
+  else:
+    return StringIO.BytesIO(data)
+  return data
+
+def str_if_bytes(data):
+  if type(data) == bytes:
+      return data.decode("utf-8")
+  return data
 
 from ostrica.utilities.cfg import Config as cfg
 
@@ -54,8 +66,31 @@ class BlackListChecker:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup BlackListChecker...'
+            print('cleanup BlackListChecker...')
         self.intelligence = {}
+
+    def _check_page(self, domain, query):
+        hhandle = httplib.HTTPConnection(domain, timeout=cfg.timeout)
+        hhandle.putrequest('GET', query)
+        hhandle.putheader('Connection', 'keep-alive')
+        hhandle.putheader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
+        hhandle.putheader('Accept-Encoding', 'gzip, deflate, sdch')
+        hhandle.putheader('User-Agent', cfg.user_agent)
+        hhandle.putheader('Accept-Language', 'en-GB,en-US;q=0.8,en;q=0.6')
+        hhandle.endheaders()
+
+        response = hhandle.getresponse()
+        if response.status == 200:
+            if response.getheader('Content-Encoding') == 'gzip':
+                content = get_zip_obj(response.read())
+                server_response = str_if_bytes(gzip.GzipFile(fileobj=content).read())
+                if self.host_to_check in server_response:
+                    return True
+            else:
+                server_response = str_if_bytes(response.read())
+                if self.host_to_check in server_response:
+                    return True
+        return False
 
     def check_blacklist(self, host):
         self.host_to_check = host
@@ -68,159 +103,26 @@ class BlackListChecker:
 
 
     def emerging_threats(self):
-        query = '/blockrules/compromised-ips.txt'
-        hhandle = httplib.HTTPConnection(self.emerging_threats_host, timeout=cfg.timeout)
-        hhandle.putrequest('GET', query)
-        hhandle.putheader('Connection', 'keep-alive')
-        hhandle.putheader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-        hhandle.putheader('Accept-Encoding', 'gzip, deflate, sdch')
-        hhandle.putheader('User-Agent', cfg.user_agent)
-        hhandle.putheader('Accept-Language', 'en-GB,en-US;q=0.8,en;q=0.6')
-        hhandle.endheaders()
-
-        response = hhandle.getresponse()
-        if response.status == 200:
-            if response.getheader('Content-Encoding') == 'gzip':
-                content = StringIO.StringIO(response.read())
-                server_response = gzip.GzipFile(fileobj=content).read()
-                if self.host_to_check in server_response:
-                    return True
-            else:
-                server_response = response.read()
-                if self.host_to_check in server_response:
-                    return True
-
-        return False
+        return self._check_page(self.emerging_threats_host, '/blockrules/compromised-ips.txt')
 
     def alienvault(self):
-        query = '/reputation.data'
-        hhandle = httplib.HTTPConnection(self.alienvault_host, timeout=cfg.timeout)
-        hhandle.putrequest('GET', query)
-        hhandle.putheader('Connection', 'keep-alive')
-        hhandle.putheader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-        hhandle.putheader('Accept-Encoding', 'gzip, deflate, sdch')
-        hhandle.putheader('User-Agent', cfg.user_agent)
-        hhandle.putheader('Accept-Language', 'en-GB,en-US;q=0.8,en;q=0.6')
-        hhandle.endheaders()
-
-        response = hhandle.getresponse()
-        if response.status == 200:
-            if response.getheader('Content-Encoding') == 'gzip':
-                content = StringIO.StringIO(response.read())
-                server_response = gzip.GzipFile(fileobj=content).read()
-                if self.host_to_check in server_response:
-                    return True
-            else:
-                server_response = response.read()
-                if self.host_to_check in server_response:
-                    return True
-
-        return False
+        return self._check_page(self.alienvault_host, '/reputation.data')
 
     def tor_exit_nodes(self):
-        query = '/ip_list_exit.php/Tor_ip_list_EXIT.csv'
-        hhandle = httplib.HTTPConnection(self.tor_nodes_host, timeout=cfg.timeout)
-        hhandle.putrequest('GET', query)
-        hhandle.putheader('Connection', 'keep-alive')
-        hhandle.putheader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-        hhandle.putheader('Accept-Encoding', 'gzip, deflate, sdch')
-        hhandle.putheader('User-Agent', cfg.user_agent)
-        hhandle.putheader('Accept-Language', 'en-GB,en-US;q=0.8,en;q=0.6')
-        hhandle.endheaders()
-
-        response = hhandle.getresponse()
-        if response.status == 200:
-            if response.getheader('Content-Encoding') == 'gzip':
-                content = StringIO.StringIO(response.read())
-                server_response = gzip.GzipFile(fileobj=content).read()
-                if self.host_to_check in server_response:
-                    return True
-            else:
-                server_response = response.read()
-                if self.host_to_check in server_response:
-                    return True
-
-        return False
+        return self._check_page(self.tor_nodes_host, '/ip_list_exit.php/Tor_ip_list_EXIT.csv')
 
     def de_blocklist(self):
-        query = '/lists/all.txt'
-        hhandle = httplib.HTTPConnection(self.blocklist_de, timeout=cfg.timeout)
-        hhandle.putrequest('GET', query)
-        hhandle.putheader('Connection', 'keep-alive')
-        hhandle.putheader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-        hhandle.putheader('Accept-Encoding', 'gzip, deflate, sdch')
-        hhandle.putheader('User-Agent', cfg.user_agent)
-        hhandle.putheader('Accept-Language', 'en-GB,en-US;q=0.8,en;q=0.6')
-        hhandle.endheaders()
-
-        response = hhandle.getresponse()
-        if response.status == 200:
-            if response.getheader('Content-Encoding') == 'gzip':
-                content = StringIO.StringIO(response.read())
-                server_response = gzip.GzipFile(fileobj=content).read()
-                if self.host_to_check in server_response:
-                    return True
-            else:
-                server_response = response.read()
-                if self.host_to_check in server_response:
-                    return True
-
-        return False
+        return self._check_page(self.blocklist_de, '/lists/all.txt')
 
     def dragon_research_bl(self):
-        query = '/insight/sshpwauth.txt'
-        hhandle = httplib.HTTPConnection(self.blocklist_de, timeout=cfg.timeout)
-        hhandle.putrequest('GET', query)
-        hhandle.putheader('Connection', 'keep-alive')
-        hhandle.putheader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-        hhandle.putheader('Accept-Encoding', 'gzip, deflate, sdch')
-        hhandle.putheader('User-Agent', cfg.user_agent)
-        hhandle.putheader('Accept-Language', 'en-GB,en-US;q=0.8,en;q=0.6')
-        hhandle.endheaders()
-
-        response = hhandle.getresponse()
-        if response.status == 200:
-            if response.getheader('Content-Encoding') == 'gzip':
-                content = StringIO.StringIO(response.read())
-                server_response = gzip.GzipFile(fileobj=content).read()
-                if self.host_to_check in server_response:
-                    return True
-            else:
-                server_response = response.read()
-                if self.host_to_check in server_response:
-                    return True
-
-        return False
+        return self._check_page(self.blocklist_de, '/insight/sshpwauth.txt')
 
     def bambenekconsulting_feed(self):
-        query = '/feeds/c2-masterlist.txt'
-        hhandle = httplib.HTTPConnection(self.bambenekconsulting, timeout=cfg.timeout)
-        hhandle.putrequest('GET', query)
-        hhandle.putheader('Connection', 'keep-alive')
-        hhandle.putheader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-        hhandle.putheader('Accept-Encoding', 'gzip, deflate, sdch')
-        hhandle.putheader('User-Agent', cfg.user_agent)
-        hhandle.putheader('Accept-Language', 'en-GB,en-US;q=0.8,en;q=0.6')
-        hhandle.endheaders()
-
-        response = hhandle.getresponse()
-        if response.status == 200:
-            if response.getheader('Content-Encoding') == 'gzip':
-                content = StringIO.StringIO(response.read())
-                server_response = gzip.GzipFile(fileobj=content).read()
-                if self.host_to_check in server_response:
-                    return True
-            else:
-                server_response = response.read()
-                if self.host_to_check in server_response:
-                    return True
-
-        return False
-
+        return self._check_page(self.bambenekconsulting, '/feeds/c2-masterlist.txt')
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running BlackListChecker() on %s' % intelligence
+        print('Running BlackListChecker() on %s' % intelligence)
 
     intel_collector = BlackListChecker()
     if extraction_type == cfg.intelligence_type['ip']:

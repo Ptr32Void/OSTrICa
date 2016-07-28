@@ -21,16 +21,10 @@
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
 import sys
-import httplib
-import string
-import socket
-import gzip
-import re
-import StringIO
-import dns
-import json
-import dns.resolver
-from bs4 import BeautifulSoup
+if sys.version_info < (3, 0):
+  import httplib
+else:
+  import http.client as httplib
 
 from ostrica.utilities.cfg import Config as cfg
 
@@ -40,6 +34,11 @@ version = 0.1
 developer = 'Roberto Sponchioni <rsponchioni@yahoo.it>'
 description = 'Plugin used to collect whois information from WhoisXmlApi'
 visual_data = False
+
+def str_if_bytes(data):
+  if type(data) == bytes:
+      return data.decode("utf-8")
+  return data
 
 class WhoisXmlApi:
 
@@ -51,7 +50,7 @@ class WhoisXmlApi:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup WhoisXmlApi...'
+            print('cleanup WhoisXmlApi...')
         self.intelligence = {}
 
     def whois(self, domain):
@@ -67,7 +66,7 @@ class WhoisXmlApi:
 
         response = hhandle.getresponse()
         if response.status == 200:
-            self.intelligence['whois'] = response.read().replace('\n', '')
+            self.intelligence['whois'] = str_if_bytes(response.read()).replace('\n', '')
             return True
         else:
             return False
@@ -75,7 +74,7 @@ class WhoisXmlApi:
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running WhoisXmlApi() on %s' % intelligence
+        print('Running WhoisXmlApi() on %s' % intelligence)
 
     intel_collector = WhoisXmlApi()
     if extraction_type == cfg.intelligence_type['ip']:

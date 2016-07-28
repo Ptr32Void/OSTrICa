@@ -20,13 +20,6 @@
 #				You should have received a copy of the GNU General Public License
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
-import sys
-import httplib
-import string
-import socket
-import gzip
-import re
-import StringIO
 import whois
 import pythonwhois
 from ipwhois import IPWhois
@@ -135,13 +128,13 @@ class PyWhoIs:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup PyWhoIs...'
+            print('cleanup PyWhoIs...')
         self.intelligence = {}
 
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running PyWhoIs() on %s' % intelligence
+        print('Running PyWhoIs() on %s' % intelligence)
 
     intel_collector = PyWhoIs()
     if extraction_type == cfg.intelligence_type['ip']:
@@ -229,7 +222,7 @@ class PyWhoisVisual:
 
     def parse_visual_data(self):
         for intel in self.visual_report_dictionary[self.origin]['PyWhois']:
-            for key, value in intel.iteritems():
+            for key, value in intel.items():
                 if key == 'emails':
                     self._manage_pywhois_emails(value)
                 elif key == 'email':

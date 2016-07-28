@@ -21,15 +21,11 @@
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
 import sys
-import httplib
-import string
-import socket
-import gzip
-import re
-import StringIO
-import json
+if sys.version_info < (3, 0):
+  import httplib
+else:
+  import http.client as httplib
 import ssl
-from bs4 import BeautifulSoup
 
 from ostrica.utilities.cfg import Config as cfg
 
@@ -39,6 +35,11 @@ version = 0.1
 developer = 'Roberto Sponchioni <rsponchioni@yahoo.it>'
 description = 'Plugin used to check if a domain or an ip is in SafeWeb'
 visual_data = False
+
+def str_if_bytes(data):
+  if type(data) == bytes:
+      return data.decode("utf-8")
+  return data
 
 class NortonSafeWeb:
 
@@ -50,7 +51,7 @@ class NortonSafeWeb:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup NortonSafeWeb...'
+            print('cleanup NortonSafeWeb...')
         self.intelligence = {}
 
     def extract_intelligence(self):
@@ -79,7 +80,7 @@ class NortonSafeWeb:
 
         response = hhandle.getresponse()
         if response.status == 200:
-            self.server_response = response.read()
+            self.server_response = str_if_bytes(response.read())
             if self.extract_intelligence() != False:
                 return True
             else:
@@ -90,7 +91,7 @@ class NortonSafeWeb:
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running NortonSafeWeb() on %s' % intelligence
+        print('Running NortonSafeWeb() on %s' % intelligence)
 
     intel_collector = NortonSafeWeb()
     if (extraction_type == cfg.intelligence_type['ip']) or (extraction_type == cfg.intelligence_type['domain']):

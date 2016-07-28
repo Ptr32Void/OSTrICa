@@ -1,4 +1,4 @@
-beautifulsoup
+bs4
 dnspython
 ipwhois
 requests
