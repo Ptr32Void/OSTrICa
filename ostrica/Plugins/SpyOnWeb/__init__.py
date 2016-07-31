@@ -22,9 +22,9 @@
 #-------------------------------------------------------------------------------
 import sys
 if sys.version_info < (3, 0):
-  import httplib
+    import httplib
 else:
-  import http.client as httplib
+    import http.client as httplib
 
 from bs4 import BeautifulSoup
 

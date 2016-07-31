@@ -22,11 +22,11 @@
 #-------------------------------------------------------------------------------
 import sys
 if sys.version_info < (3, 0):
-  import httplib
-  import StringIO
+    import httplib
+    import StringIO
 else:
-  import http.client as httplib
-  import io as StringIO
+    import http.client as httplib
+    import io as StringIO
 import gzip
 
 import json
@@ -41,11 +41,11 @@ description = 'Plugin used to collect information about IPs, domains or ASNs on 
 visual_data = True
 
 def get_zip_obj(data):
-  if sys.version_info < (3, 0):
-    return StringIO.StringIO(data)
-  else:
-    return StringIO.BytesIO(data)
-  return data
+    if sys.version_info < (3, 0):
+        return StringIO.StringIO(data)
+    else:
+        return StringIO.BytesIO(data)
+    return data
 
 def str_if_bytes(data):
     if type(data) == bytes:

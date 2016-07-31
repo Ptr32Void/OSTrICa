@@ -22,9 +22,9 @@
 #-------------------------------------------------------------------------------
 import sys
 if sys.version_info < (3, 0):
-  import httplib
+    import httplib
 else:
-  import http.client as httplib
+    import http.client as httplib
 import ssl
 
 from ostrica.utilities.cfg import Config as cfg
@@ -37,9 +37,9 @@ description = 'Plugin used to check if a domain or an ip is in SafeWeb'
 visual_data = False
 
 def str_if_bytes(data):
-  if type(data) == bytes:
-      return data.decode("utf-8")
-  return data
+    if type(data) == bytes:
+        return data.decode("utf-8")
+    return data
 
 class NortonSafeWeb:
 

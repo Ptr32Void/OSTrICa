@@ -23,9 +23,9 @@
 import sys
 import traceback
 if sys.version_info < (3, 0):
-  import httplib
+    import httplib
 else:
-  import http.client as httplib
+    import http.client as httplib
 import re
 from bs4 import BeautifulSoup
 

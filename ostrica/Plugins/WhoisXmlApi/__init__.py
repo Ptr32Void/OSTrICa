@@ -22,9 +22,9 @@
 #-------------------------------------------------------------------------------
 import sys
 if sys.version_info < (3, 0):
-  import httplib
+    import httplib
 else:
-  import http.client as httplib
+    import http.client as httplib
 
 from ostrica.utilities.cfg import Config as cfg
 
@@ -36,9 +36,9 @@ description = 'Plugin used to collect whois information from WhoisXmlApi'
 visual_data = False
 
 def str_if_bytes(data):
-  if type(data) == bytes:
-      return data.decode("utf-8")
-  return data
+    if type(data) == bytes:
+        return data.decode("utf-8")
+    return data
 
 class WhoisXmlApi:
 

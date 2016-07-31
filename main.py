@@ -26,7 +26,7 @@ import uuid
 import os
 
 if sys.version_info >= (3, 0):
-  raw_input = input
+    raw_input = input
 
 from ostrica.utilities.Ostrica import OSTrICa
 from ostrica.utilities.cfg import Config as cfg

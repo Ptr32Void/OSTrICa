@@ -22,11 +22,11 @@
 #-------------------------------------------------------------------------------
 import sys
 if sys.version_info < (3, 0):
-  import httplib
-  import StringIO
+    import httplib
+    import StringIO
 else:
-  import http.client as httplib
-  import io as StringIO
+    import http.client as httplib
+    import io as StringIO
 import gzip
 
 from bs4 import BeautifulSoup

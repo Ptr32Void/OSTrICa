@@ -27,9 +27,9 @@ import sys
 from . import PluginLoader
 
 if sys.version_info < (3, 0):
-  import Queue
+    import Queue
 else:
-  import queue as Queue
+    import queue as Queue
 
 from .cfg import Config as cfg
 

@@ -22,24 +22,24 @@
 #-------------------------------------------------------------------------------
 import sys
 if sys.version_info < (3, 0):
-  import httplib
-  import StringIO
+    import httplib
+    import StringIO
 else:
-  import http.client as httplib
-  import io as StringIO
+    import http.client as httplib
+    import io as StringIO
 import gzip
 
 def get_zip_obj(data):
-  if sys.version_info < (3, 0):
-    return StringIO.StringIO(data)
-  else:
-    return StringIO.BytesIO(data)
+    if sys.version_info < (3, 0):
+        return StringIO.StringIO(data)
+    else:
+        return StringIO.BytesIO(data)
   return data
 
 def str_if_bytes(data):
-  if type(data) == bytes:
-      return data.decode("utf-8")
-  return data
+    if type(data) == bytes:
+        return data.decode("utf-8")
+    return data
 
 from ostrica.utilities.cfg import Config as cfg
 
