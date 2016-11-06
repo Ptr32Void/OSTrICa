@@ -35,7 +35,7 @@ Dependencies depends on the installed Plugins. For example:
 * `python-deepviz-master`, used by DeepViz plugin (it requires an API key) - At the moment DeepViz plugin is not available to the public.
 * `python-whois-0.5.2`, used by PyWhois plugin
 * `pythonwhois-2.4.3`, used by PyWhois plugin
-* `requests`, used by ThreatCrowd plugin (query limit is set as per https://github.com/threatcrowd/ApiV2)
+* `requests`, used by ThreatCrowd/ThreatMiner plugin (query limit is set)
 
 Note: OSTrICa works on Python version >= 2.7.9
 
@@ -104,6 +104,7 @@ To generate the graph 2 commands are available:
 
 ## Currently available plugins
 The following list contains the currently available plugins:
+* `ThreatMiner` - Developer `Ptr32Void`
 * `ThreatCrowd` - Developer `Ptr32Void`
 * `BlackLists` - Developer `Ptr32Void`
 * `CymruWhois` - Developer `Ptr32Void`
