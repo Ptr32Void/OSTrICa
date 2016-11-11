@@ -1,3 +1,4 @@
+BeautifulSoup==3.2.1
 beautifulsoup4==4.5.1
 dnspython==1.15.0
 ipaddr==2.1.11
