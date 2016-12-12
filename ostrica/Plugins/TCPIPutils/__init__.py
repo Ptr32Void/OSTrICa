@@ -20,12 +20,15 @@
 #				You should have received a copy of the GNU General Public License
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
-import httplib
-import string
-import socket
+import sys
+if sys.version_info < (3, 0):
+    import httplib
+    import StringIO
+else:
+    import http.client as httplib
+    import io as StringIO
 import gzip
 import re
-import StringIO
 from bs4 import BeautifulSoup
 
 from ostrica.utilities.cfg import Config as cfg
@@ -50,7 +53,7 @@ class TCPIPUtils(object):
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup TCPIPutils...'
+            print('cleanup TCPIPutils...')
         self.intelligence = {}
 
     def asn_information(self, asn):
@@ -304,7 +307,7 @@ class TCPIPUtils(object):
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running TCPIPUtils() on %s' % intelligence
+        print('Running TCPIPUtils() on %s' % intelligence)
     intel_collector = TCPIPUtils()
     if extraction_type == cfg.intelligence_type['domain']:
         if intel_collector.domain_information(intelligence) == True:

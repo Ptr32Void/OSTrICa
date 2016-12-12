@@ -20,16 +20,8 @@
 #				You should have received a copy of the GNU General Public License
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
-import sys
-import httplib
-import string
-import socket
-import gzip
-import re
-import StringIO
 import dns
 import dns.resolver
-from bs4 import BeautifulSoup
 
 from ostrica.utilities.cfg import Config as cfg
 
@@ -49,7 +41,7 @@ class CymruWhois:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup CymruWhois...'
+            print('cleanup CymruWhois...')
         self.intelligence = {}
 
     def extract_ip_info(self, ip_address):
@@ -69,7 +61,7 @@ class CymruWhois:
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running CymruWhois() on %s' % intelligence
+        print('Running CymruWhois() on %s' % intelligence)
 
     intel_collector = CymruWhois()
     if extraction_type == cfg.intelligence_type['ip']:
@@ -126,7 +118,7 @@ class CymruWhoisVisual:
 
     def parse_visual_data(self):
         for intel in self.visual_report_dictionary[self.origin]['CymruWhois']:
-            for key, value in intel.iteritems():
+            for key, value in intel.items():
                 if key == 'country':
                     self._manage_cymru_country(value)
                 elif key == 'asn':

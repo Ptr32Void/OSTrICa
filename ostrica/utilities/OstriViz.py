@@ -24,6 +24,11 @@ import re
 import os
 import uuid
 
+def str_if_bytes(data):
+    if type(data) == bytes:
+        return data.decode("utf-8")
+    return data
+
 class OstriViz:
 
     def __init__(self, ):
@@ -57,7 +62,7 @@ class OstriViz:
                            src="resource/threat.gif"></td><td class="h3" width="100%">Related Indicator(s)</td></tr></tbody></table>'
             self.nodes_html += '<br/>'
             self.nodes_html += '<ul>'
-            for node_name, value in self.nodes.iteritems():
+            for node_name, value in self.nodes.items():
                 if node_name is None:
                     continue
                 if len(node_name) != 0:
@@ -68,17 +73,17 @@ class OstriViz:
 
         # TODO: fix it. It is a quick hack around unicode data
         self.nodes_html = self.nodes_html.encode('utf8', 'replace')
-        self.nodes_html = re.sub(r'[^\x00-\x7f]',r'',self.nodes_html)
+        self.nodes_html = re.sub(b'[^\x00-\x7f]',b'',self.nodes_html)
         
         filename = os.path.join(self.script_path, 'viz', rnd_fn)
         fh = open(filename, 'w')
-        fh.write(self.generate_html_header())
-        fh.write(self.generate_html_nodes())
-        fh.write(self.generate_html_mid_page(graph_typology))
-        fh.write(self.nodes_html)
-        fh.write(self.generate_html_footer())
+        fh.write(str_if_bytes(self.generate_html_header()))
+        fh.write(str_if_bytes(self.generate_html_nodes()))
+        fh.write(str_if_bytes(self.generate_html_mid_page(graph_typology)))
+        fh.write(str_if_bytes(self.nodes_html))
+        fh.write(str_if_bytes(self.generate_html_footer()))
         fh.close()
-        print 'Graph generated in %s' % (filename)
+        print('Graph generated in %s' % (filename))
 
     def _load_nodes(self, ext_nodes, ext_edges, ext_original_intel):
         self.nodes = ext_nodes
@@ -124,7 +129,7 @@ class OstriViz:
             buff += '{data: {id: "%s", name: "%s", size: %d, color: "%s", label: "original"}},\n' \
                      % (original_node_name, original_node_name, 60, '#666699')
 
-        for node_name, value in self.nodes.iteritems():
+        for node_name, value in self.nodes.items():
             idx_action += 1
             if node_name in self.original_intel:
                 continue
@@ -135,7 +140,7 @@ class OstriViz:
 
         buff += '], edges: ['
 
-        for key, value in self.edges.iteritems():
+        for key, value in self.edges.items():
             for target in value:
                 if (key, target) not in check_targets:
                     buff += '{data: {source: "%s", target: "%s", label: "%s"}, classes: "autorotate"},\n' % (key, target, self.nodes[target][2])
@@ -145,6 +150,6 @@ class OstriViz:
         buff += '] },'
         # TODO: fix it. It is a quick hack around unicode data
         buff = buff.encode('utf8', 'replace')
-        buff = re.sub(r'[^\x00-\x7f]',r'',buff)
+        buff = re.sub(b'[^\x00-\x7f]',b'',buff)
 
         return buff

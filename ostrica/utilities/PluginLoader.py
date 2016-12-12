@@ -25,7 +25,7 @@ import inspect
 import imp
 import os
 
-from cfg import Config as cfg
+from .cfg import Config as cfg
 
 class PluginLoader(object):
 
@@ -43,23 +43,23 @@ class PluginLoader(object):
         try:
             f, filename, description = imp.find_module(cfg.main_module, [plugin_location])
             if cfg.DEBUG:
-                print 'Plugin location: %s (%s)' % (plugin_location, plugin_name)
+                print('Plugin location: %s (%s)' % (plugin_location, plugin_name))
             self.load_module(plugin_name, f, filename, description)
-        except ImportError, e:
-            print e
+        except ImportError as e:
+            print(e)
 
     def load_module(self, plugin_name, f, filename, description):
         loaded_plugin_info = imp.load_module(plugin_name, f, filename, description)
         if loaded_plugin_info.enabled:
             try:
                 if cfg.DEBUG:
-                    print 'Loading %s' % (plugin_name)
+                    print('Loading %s' % (plugin_name))
                 self.plugins.append({'name': plugin_name, 'extraction_type':loaded_plugin_info.extraction_type, 'plugin':loaded_plugin_info})
-            except AttributeError, e:
+            except AttributeError as e:
                 if cfg.DEBUG:
-                    print 'No extraction_types for plugin %s' % (plugin_name)
-                print traceback.print_exc()
+                    print('No extraction_types for plugin %s' % (plugin_name))
+                print(traceback.print_exc())
                 self.plugins.append({'name': plugin_name, 'extraction_type':'', 'plugin':loaded_plugin_info})
         else:
             if cfg.DEBUG:
-                print 'Plugin %s disabled' % (plugin_name)
+                print('Plugin %s disabled' % (plugin_name))

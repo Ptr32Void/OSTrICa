@@ -20,13 +20,12 @@
 #				You should have received a copy of the GNU General Public License
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
-import traceback
-import datetime
-import httplib
-import string
-import socket
 import sys
-import os
+import traceback
+if sys.version_info < (3, 0):
+    import httplib
+else:
+    import http.client as httplib
 import re
 from bs4 import BeautifulSoup
 
@@ -57,7 +56,7 @@ class VT:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup VirusTotal...'
+            print('cleanup VirusTotal...')
         self.intelligence = {}
 
     @staticmethod
@@ -275,7 +274,7 @@ class VT:
                 self.last_submission_date = date_to_convert[:pos].strip()
             return True
         except:
-            print traceback.print_exc()
+            print(traceback.print_exc())
             return False
 
 
@@ -327,7 +326,7 @@ class VTNetwork:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup VirusTotal Network...'
+            print('cleanup VirusTotal Network...')
         self.intelligence = {}
 
     def get_domain_intelligence(self, domain):
@@ -449,7 +448,7 @@ class VTNetwork:
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running VT() on %s' % intelligence
+        print('Running VT() on %s' % intelligence)
     if extraction_type == cfg.intelligence_type['sha256']:
         intel_collector = VT()
         if intel_collector.get_detections_by_sha256(intelligence) == True:
@@ -596,7 +595,7 @@ class VTVisual:
 
     def parse_visual_data(self):
         for intel in self.visual_report_dictionary[self.origin]['VT']:
-            for key, value in intel.iteritems():
+            for key, value in intel.items():
                 if key == 'domains':
                     self._manage_vt_domains(value)
                 elif key == 'ip_addresses':
@@ -708,7 +707,7 @@ class VTVisual:
     def _manage_av_results(self, av_reults):
         size = 30
         detection = ''
-        for av_name, av_values in av_reults.iteritems():
+        for av_name, av_values in av_reults.items():
             if av_name == 'Symantec' and av_values[0] != 'Not detected':
                 detection = av_values[0]
                 break

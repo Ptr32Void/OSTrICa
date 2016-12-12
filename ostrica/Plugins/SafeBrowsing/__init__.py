@@ -21,14 +21,15 @@
 #				along with OSTrICa. If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
 import sys
-import httplib
-import string
-import socket
+if sys.version_info < (3, 0):
+    import httplib
+    import StringIO
+else:
+    import http.client as httplib
+    import io as StringIO
 import gzip
-import re
-import StringIO
+
 import json
-from bs4 import BeautifulSoup
 
 from ostrica.utilities.cfg import Config as cfg
 
@@ -38,6 +39,18 @@ version = 0.1
 developer = 'Roberto Sponchioni <rsponchioni@yahoo.it>'
 description = 'Plugin used to collect information about IPs, domains or ASNs on SafeBrowsing'
 visual_data = True
+
+def get_zip_obj(data):
+    if sys.version_info < (3, 0):
+        return StringIO.StringIO(data)
+    else:
+        return StringIO.BytesIO(data)
+    return data
+
+def str_if_bytes(data):
+    if type(data) == bytes:
+        return data.decode("utf-8")
+    return data
 
 class SafeBrowsing:
 
@@ -49,7 +62,7 @@ class SafeBrowsing:
 
     def __del__(self):
         if cfg.DEBUG:
-            print 'cleanup SafeBrowsing...'
+            print('cleanup SafeBrowsing...')
         self.intelligence = {}
 
     def extract_json(self, server_response):
@@ -84,8 +97,8 @@ class SafeBrowsing:
         response = hhandle.getresponse()
         if response.status == 200:
             if response.getheader('Content-Encoding') == 'gzip':
-                content = StringIO.StringIO(response.read())
-                if self.extract_json(gzip.GzipFile(fileobj=content).read()) != False:
+                content = get_zip_obj(response.read())
+                if self.extract_json(str_if_bytes(gzip.GzipFile(fileobj=content).read())) != False:
                     self.extract_intelligence()
                     return True
                 else:
@@ -96,7 +109,7 @@ class SafeBrowsing:
 
 def run(intelligence, extraction_type):
     if cfg.DEBUG:
-        print 'Running SafeBrowsing() on %s' % intelligence
+        print('Running SafeBrowsing() on %s' % intelligence)
 
     intel_collector = SafeBrowsing()
     if (extraction_type == cfg.intelligence_type['ip']) or (extraction_type == cfg.intelligence_type['domain']):
